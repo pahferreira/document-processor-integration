@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  regula-doc-reader:
+    image: regulaforensics/docreader:nightly
+    container_name: regula-doc-reader
+    ports:
+      - "8080:8080"
+    volumes:
+      - regula-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - regula-network
+
+volumes:
+  regula-data:
+
+networks:
+  regula-network:
+    driver: bridge
