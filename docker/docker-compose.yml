@@ -8,6 +8,7 @@ services:
       - "8080:8080"
     volumes:
       - regula-data:/app/data
+      - ../regula.license:/app/extBin/unix/regula.license
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
