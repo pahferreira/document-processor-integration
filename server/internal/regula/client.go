@@ -3,7 +3,6 @@ package regula
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"time"
@@ -117,7 +116,7 @@ func NewClient() *Client {
 	}
 }
 
-func (c *Client) ProcessRegulaDocumentRead(image string) (*DocumentProcessResponse, error) {
+func (c *Client) ProcessRegulaDocumentRead(image string) ([]TextField, error) {
 	payload := DocumentProcessPayload{
 		ProcessParam: DocumentProcessParams{
 			Scenario: "FullProcess",
@@ -142,7 +141,6 @@ func (c *Client) ProcessRegulaDocumentRead(image string) (*DocumentProcessRespon
 		return nil, err
 	}
 	
-	fmt.Printf("✅ Processing image response: %v \n", resp)
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
@@ -156,6 +154,15 @@ func (c *Client) ProcessRegulaDocumentRead(image string) (*DocumentProcessRespon
 		return nil, err
 	}
 
-	return &result, nil
+	return extractTextFields(&result), nil
 }
 
+func extractTextFields(response *DocumentProcessResponse) []TextField {
+	var fields []TextField
+	for _, container := range response.ContainerList.List {
+		if container.Text != nil {
+			fields = append(fields, container.Text.FieldList...)
+		}
+	}
+	return fields
+}

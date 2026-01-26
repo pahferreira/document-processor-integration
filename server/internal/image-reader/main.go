@@ -7,6 +7,7 @@ import (
 
 type FileReader interface {
 	Read(path string) (string, error)
+	EncodeFile(fileBytes []byte) (string, error)
 }
 
 type ImageReader struct {}
@@ -21,8 +22,11 @@ func (ir *ImageReader) Read(path string) (string, error) {
 		return "", err
 	}
 
-	encodedFile := base64.StdEncoding.EncodeToString(fileData)
-	return encodedFile, nil
+	return string(fileData), nil
 }
 
+func (ir *ImageReader) EncodeFile(fileBytes []byte) (string, error) {
+	encodedFile := base64.StdEncoding.EncodeToString(fileBytes)
+	return encodedFile, nil
+}
 
