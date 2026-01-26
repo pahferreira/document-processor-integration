@@ -23,8 +23,6 @@ func NewRegulaDocumentProcessor() DocumentProcessor {
 	}
 }
 
-const maxConcurrent = 10 // Limit concurrent API requests
-
 func (r *RegulaDocumentProcessor) ProcessDocuments(files []os.DirEntry, imagesDirectory string) (map[string][]any, error) {
 	results := make(map[string][]regula.TextField)
 	var mu sync.Mutex

@@ -5,12 +5,22 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch Test Batch",
+      "name": "Launch Regula Test",
       "type": "go",
       "request": "launch",
       "mode": "auto",
       "program": "${workspaceFolder}/server/cmd/test-batch",
-      "cwd": "${workspaceFolder}/server"
+      "cwd": "${workspaceFolder}/server",
+      "args": ["-integrator", "regula"]
+    },
+    {
+      "name": "Launch Recognito Test",
+      "type": "go",
+      "request": "launch",
+      "mode": "auto",
+      "program": "${workspaceFolder}/server/cmd/test-batch",
+      "cwd": "${workspaceFolder}/server",
+      "args": ["-integrator", "recognito"]
     }
   ]
 }

@@ -63,6 +63,15 @@ type IDCardOCRResponse struct {
 	Error        string            `json:"error,omitempty"`
 }
 
+type OCRDocumentResponse struct {
+	Status       string            `json:"status"`
+	DocumentType string            `json:"document_type"`
+	MRZData      *MRZData          `json:"mrz_data,omitempty"`
+	OCRData      *OCRData          `json:"ocr_data,omitempty"`
+	Confidence   *ConfidenceScores `json:"confidence,omitempty"`
+	Error        string            `json:"error,omitempty"`
+}
+
 type BarcodeData struct {
 	Format     string `json:"format"`
 	RawData    string `json:"raw_data"`
@@ -93,7 +102,7 @@ type LivenessResponse struct {
 	Error          string          `json:"error,omitempty"`
 }
 
-func (c *Client) OCRIDCard(frontImage []byte, backImage []byte) (*IDCardOCRResponse, error) {
+func (c *Client) OCRIDCard(frontImage []byte, backImage []byte) (*OCRDocumentResponse, error) {
 	var buf bytes.Buffer
 	writer := multipart.NewWriter(&buf)
 
@@ -139,9 +148,18 @@ func (c *Client) OCRIDCard(frontImage []byte, backImage []byte) (*IDCardOCRRespo
 		return nil, fmt.Errorf("failed to read response: %w", err)
 	}
 
-	var result IDCardOCRResponse
-	if err := json.Unmarshal(body, &result); err != nil {
+	var jsonResult IDCardOCRResponse
+	if err := json.Unmarshal(body, &jsonResult); err != nil {
 		return nil, fmt.Errorf("failed to parse response: %w", err)
+	}
+
+	result := OCRDocumentResponse{
+		Status:       jsonResult.Status,
+		DocumentType: jsonResult.DocumentType,
+		MRZData:      jsonResult.MRZData,
+		OCRData:      jsonResult.OCRData,
+		Confidence:   jsonResult.Confidence,
+		Error:        jsonResult.Error,
 	}
 
 	return &result, nil
