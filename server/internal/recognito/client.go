@@ -16,7 +16,7 @@ type Client struct {
 	HTTPClient         *http.Client
 }
 
-const baseURL = "https://privateid-document-api-255329405686.us-central1.run.app"
+const baseURL = "http://api-document.privateid.com"
 const authToken = "ZsBbWuhXTrWOZ4hpb7NG"
 
 func NewClient() *Client {
